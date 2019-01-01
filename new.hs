@@ -11,6 +11,10 @@ data Entry a b c d = Entry {
     comment :: d
   } deriving (Eq, Ord, Show)
 
+-- | Convert an Entry into a list.
+toList :: Entry a a a a -> [a]
+toList (Entry a b c d) = [a, b, c, d]
+
 -- | Reads a file describing which media items you have already watched or
 -- listened to.
 readOldList :: FilePath -> IO [Entry String String String String]
@@ -34,7 +38,7 @@ wordsTabs str = helper str "" []
 
 -- | Search the database of old items for one matching a given item exactly.
 search :: Eq a => [Entry a a a a] -> [a] -> [Entry a a a a]
-search db lst = filter (\(Entry c n n' d) -> isPrefixOf lst [c,n,n',d]) db
+search db lst = filter (isPrefixOf lst . toList) db
 
 -- | Add a new entry to the in-memory database.
 addEntry :: (Ord a, Ord b, Ord c, Ord d) => [Entry a b c d] -> a -> b -> c -> d -> [Entry a b c d]
@@ -57,11 +61,11 @@ listFiles lst = getHomeDirectory >>= \home -> helper (dir lst home) (cond lst)
 -- | Filter for files that are not listed in the database of old
 -- videos/podcasts.
 findNew :: Eq c => [Entry a b [c] d] -> [[c]] -> [[c]]
-findNew db = filter (\f -> all (\(Entry _ _ n _) -> not $ isInfixOf n f) db)
+findNew db = filter (\f -> all (not . flip isInfixOf f . ident) db)
 
 -- | Filter for files that are in the database of old videos/podcasts.
 findOld :: Eq c => [Entry a b [c] d] -> [[c]] -> [[c]]
-findOld db = filter (\f -> any (\(Entry _ _ n _) -> isInfixOf n f) db)
+findOld db = filter (\f -> any (flip isInfixOf f . ident) db)
 
 main = do
   progName <- getProgName
