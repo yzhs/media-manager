@@ -13,9 +13,11 @@ data Entry a b c d = Entry {
 
 -- | Reads a file describing which media items you have already watched or
 -- listened to.
+readOldList :: FilePath -> IO [Entry String String String String]
 readOldList listFile = readFile listFile >>= return . map parseLine . lines
 
 -- | Read a line describing a single item you already watched or listened to.
+parseLine :: String -> Entry String String String String
 parseLine line = Entry cat name num (unwords desc)
   where (cat:name:num:desc) = wordsTabs line
 
@@ -31,9 +33,11 @@ wordsTabs str = helper str "" []
     helper (x:xs) tmp lst = helper xs (x:tmp) lst
 
 -- | Search the database of old items for one matching a given item exactly.
+search :: Eq a => [Entry a a a a] -> [a] -> [Entry a a a a]
 search db lst = filter (\(Entry c n n' d) -> isPrefixOf lst [c,n,n',d]) db
 
 -- | Add a new entry to the in-memory database.
+addEntry :: (Ord a, Ord b, Ord c, Ord d) => [Entry a b c d] -> a -> b -> c -> d -> [Entry a b c d]
 addEntry db cat name num desc = insert (Entry cat name num desc) db
 
 toString :: Entry String String String String -> String
