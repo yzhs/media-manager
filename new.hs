@@ -4,7 +4,12 @@ import System.Directory
 import System.Environment
 import System.Exit
 
-data Entry a b c d = Entry a b c d deriving (Eq, Ord, Show)
+data Entry a b c d = Entry {
+    typ :: a,
+    title :: b,
+    ident :: c,
+    comment :: d
+  } deriving (Eq, Ord, Show)
 
 -- | Reads a file describing which media items you have already watched or
 -- listened to.
