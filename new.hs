@@ -15,6 +15,9 @@ data Entry a b c d = Entry {
 toList :: Entry a a a a -> [a]
 toList (Entry a b c d) = [a, b, c, d]
 
+toString :: Entry String String String String -> String
+toString = unwords . toList
+
 -- | Reads a file describing which media items you have already watched or
 -- listened to.
 readOldList :: FilePath -> IO [Entry String String String String]
@@ -43,9 +46,6 @@ search db lst = filter (isPrefixOf lst . toList) db
 -- | Add a new entry to the in-memory database.
 addEntry :: (Ord a, Ord b, Ord c, Ord d) => [Entry a b c d] -> a -> b -> c -> d -> [Entry a b c d]
 addEntry db cat name num desc = insert (Entry cat name num desc) db
-
-toString :: Entry String String String String -> String
-toString (Entry a b c d) = unwords [a, b, c, d]
 
 -- | Get list of files 
 listFiles :: [String] -> IO [FilePath]
