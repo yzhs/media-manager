@@ -73,7 +73,9 @@ main = do
   home     <- getHomeDirectory
   db       <- readOldList (home ++ "/done.txt")
   files    <- listFiles args
-  mapM_ putStrLn $ sort $ (if progName == "new" then findNew else findOld) (search db args) files
+  let find = if progName == "new" then findNew else findOld
+  let interestingFiles = sort $ flip find files $ search db args
+  mapM_ putStrLn $ interestingFiles
 
 
 -- | Parse the command line arguments.
