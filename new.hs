@@ -47,7 +47,7 @@ search db lst = filter (isPrefixOf lst . toList) db
 addEntry :: (Ord a, Ord b, Ord c, Ord d) => [Entry a b c d] -> a -> b -> c -> d -> [Entry a b c d]
 addEntry db cat name num desc = insert (Entry cat name num desc) db
 
--- | Get list of files 
+-- | Get list of files
 listFiles :: [String] -> IO [FilePath]
 listFiles lst = getHomeDirectory >>= \home -> helper (dir lst home) (cond lst)
   where helper dirs cond = do
