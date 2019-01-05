@@ -1,8 +1,8 @@
 import Control.Monad
 import Data.List
-import System.Directory
-import System.Environment
-import System.Exit
+import System.Directory (getDirectoryContents, getHomeDirectory)
+import System.Environment (getArgs, getProgName)
+import System.Exit (ExitCode(..), exitWith)
 
 data Entry a b c d = Entry {
     typ :: a,
