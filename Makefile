@@ -1,10 +1,10 @@
 all: new old
 
-new: new.hs
-	ghc --make new.hs
+new: Main.hs
+	cabal new-build
 
 old: new
-	cp new old
+	ln -s new old
 
 install:
 	install -s new old /usr/local/bin
